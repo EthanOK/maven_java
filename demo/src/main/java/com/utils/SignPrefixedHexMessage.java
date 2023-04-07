@@ -11,6 +11,9 @@ import org.web3j.utils.Numeric;
 
 public class SignPrefixedHexMessage {
     public static void main(String[] args) throws SignatureException {
+        // Account #0: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (10000 ETH)
+        // Private Key:
+        // 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 
         String privateKeyHex = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
