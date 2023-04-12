@@ -11,8 +11,7 @@ import org.web3j.abi.datatypes.generated.Uint256;
 
 public class EncodeStaticStructDynamicArray {
     public static void main(String[] args) {
-        // 定义 DynamicStruct 数组
-
+        // 定义 StaticStruct 数组
         int len = 3;
         StaticStruct[] orders = new StaticStruct[len];
         Uint256[] royaltyFees = new Uint256[len];
