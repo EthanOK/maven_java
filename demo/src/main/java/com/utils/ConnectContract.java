@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -19,98 +20,116 @@ import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.http.HttpService;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class ConnectContract {
 
-    public static String RPC = "https://eth-goerli.g.alchemy.com/v2/83yL2qXH68vnTkzzida15zCVNGZCy1JO";
+        static Dotenv dotenv = Dotenv.load();
 
-    public static void main(String[] args) throws IOException {
-        Web3j web3j = Web3j
-                .build(new HttpService(RPC));
+        public static String RPC = dotenv.get("ALCHEMY_GOERLI_URL");;
 
-        // 获取合约地址和ABI
-        String contractAddress = "0x0d3e02768ab63516ab5d386fad462214ca3e6a86";
-        String tokenId = "10";
-        String uri = getTokenURI(web3j, contractAddress, tokenId);
-        System.out.println("TokenURI:" + uri);
-        String owner = getTOwnerOf(web3j, contractAddress, tokenId);
-        System.out.println("OwnerOf:" + owner);
-        String name = getName(web3j, contractAddress);
-        System.out.println("Name:" + name);
-        String symbol = getSymbol(web3j, contractAddress);
-        System.out.println("Symbol:" + symbol);
-    }
+        public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+                Web3j web3j = Web3j
+                                .build(new HttpService(RPC));
 
-    public static String getTokenURI(Web3j web3j, String contractAddress,
-            String tokenId) throws IOException {
-        BigInteger tokenId_ = new BigInteger(tokenId);
-        Function function = new Function("tokenURI", Arrays.asList(new Uint256(tokenId_)),
-                Arrays.asList(new TypeReference<DynamicBytes>() {
-                }));
-        String encodedFunction = FunctionEncoder.encode(function);
-        EthCall response = web3j.ethCall(
-                Transaction.createEthCallTransaction("0x0d3e02768ab63516ab5d386fad462214ca3e6a86", contractAddress,
-                        encodedFunction),
-                DefaultBlockParameterName.LATEST)
-                .send();
-        List<Type> outputParams = FunctionReturnDecoder.decode(response.getValue(), function.getOutputParameters());
-        DynamicBytes dynamicBytes = (DynamicBytes) outputParams.get(0);
-        byte[] bytesValue = dynamicBytes.getValue();
-        String stringValue = new String(bytesValue);
-        return stringValue;
-    }
+                // 获取合约地址和ABI
+                String contractAddress = "0x0d3e02768ab63516ab5d386fad462214ca3e6a86";
+                String tokenId = "10";
+                System.out.println("`````````````````````````````````````");
+                String uri = getTokenURI(web3j, contractAddress, tokenId);
+                System.out.println("TokenURI:" + uri);
 
-    public static String getName(Web3j web3j, String contractAddress) throws IOException {
+                String owner = getTOwnerOf(web3j, contractAddress, tokenId);
+                System.out.println("OwnerOf:" + owner);
 
-        Function function = new Function("name", Arrays.asList(),
-                Arrays.asList(new TypeReference<DynamicBytes>() {
-                }));
-        String encodedFunction = FunctionEncoder.encode(function);
-        EthCall response = web3j.ethCall(
-                Transaction.createEthCallTransaction("0x0d3e02768ab63516ab5d386fad462214ca3e6a86", contractAddress,
-                        encodedFunction),
-                DefaultBlockParameterName.LATEST)
-                .send();
-        List<Type> outputParams = FunctionReturnDecoder.decode(response.getValue(), function.getOutputParameters());
-        DynamicBytes dynamicBytes = (DynamicBytes) outputParams.get(0);
-        byte[] bytesValue = dynamicBytes.getValue();
-        String stringValue = new String(bytesValue);
-        return stringValue;
-    }
+                String name = getName(web3j, contractAddress);
+                System.out.println("Name:" + name);
 
-    public static String getSymbol(Web3j web3j, String contractAddress) throws IOException {
+                String symbol = getSymbol(web3j, contractAddress);
+                System.out.println("Symbol:" + symbol);
+        }
 
-        Function function = new Function("symbol", Arrays.asList(),
-                Arrays.asList(new TypeReference<DynamicBytes>() {
-                }));
-        String encodedFunction = FunctionEncoder.encode(function);
-        EthCall response = web3j.ethCall(
-                Transaction.createEthCallTransaction("0x0d3e02768ab63516ab5d386fad462214ca3e6a86", contractAddress,
-                        encodedFunction),
-                DefaultBlockParameterName.LATEST)
-                .send();
-        List<Type> outputParams = FunctionReturnDecoder.decode(response.getValue(), function.getOutputParameters());
-        DynamicBytes dynamicBytes = (DynamicBytes) outputParams.get(0);
-        byte[] bytesValue = dynamicBytes.getValue();
-        String stringValue = new String(bytesValue);
-        return stringValue;
-    }
+        public static String getTokenURI(Web3j web3j, String contractAddress,
+                        String tokenId) throws IOException, InterruptedException, ExecutionException {
+                BigInteger tokenId_ = new BigInteger(tokenId);
+                Function function = new Function("tokenURI", Arrays.asList(new Uint256(tokenId_)),
+                                Arrays.asList(new TypeReference<DynamicBytes>() {
+                                }));
+                String encodedFunction = FunctionEncoder.encode(function);
+                EthCall response = web3j.ethCall(
+                                Transaction.createEthCallTransaction("0x0d3e02768ab63516ab5d386fad462214ca3e6a86",
+                                                contractAddress,
+                                                encodedFunction),
+                                DefaultBlockParameterName.LATEST)
+                                .sendAsync().get();
+                List<Type> outputParams = FunctionReturnDecoder.decode(response.getValue(),
+                                function.getOutputParameters());
+                DynamicBytes dynamicBytes = (DynamicBytes) outputParams.get(0);
+                byte[] bytesValue = dynamicBytes.getValue();
+                System.out.println(bytesValue.length);
+                String stringValue = new String(bytesValue);
+                System.out.println(stringValue.length());
+                return stringValue;
+        }
 
-    public static String getTOwnerOf(Web3j web3j, String contractAddress,
-            String tokenId) throws IOException {
-        BigInteger tokenId_ = new BigInteger(tokenId);
-        Function function = new Function("ownerOf", Arrays.asList(new Uint256(tokenId_)),
-                Arrays.asList(new TypeReference<Address>() {
-                }));
-        String encodedFunction = FunctionEncoder.encode(function);
-        EthCall response = web3j.ethCall(
-                Transaction.createEthCallTransaction("0x0d3e02768ab63516ab5d386fad462214ca3e6a86", contractAddress,
-                        encodedFunction),
-                DefaultBlockParameterName.LATEST)
-                .send();
-        List<Type> outputParams = FunctionReturnDecoder.decode(response.getValue(), function.getOutputParameters());
+        public static String getName(Web3j web3j, String contractAddress) throws IOException {
 
-        Object bytesValue = outputParams.get(0).getValue();
-        String stringValue = (String) bytesValue;
-        return stringValue;
-    }
+                Function function = new Function("name", Arrays.asList(),
+                                Arrays.asList(new TypeReference<DynamicBytes>() {
+                                }));
+                String encodedFunction = FunctionEncoder.encode(function);
+                EthCall response = web3j.ethCall(
+                                Transaction.createEthCallTransaction("0x0d3e02768ab63516ab5d386fad462214ca3e6a86",
+                                                contractAddress,
+                                                encodedFunction),
+                                DefaultBlockParameterName.LATEST)
+                                .send();
+                List<Type> outputParams = FunctionReturnDecoder.decode(response.getValue(),
+                                function.getOutputParameters());
+                DynamicBytes dynamicBytes = (DynamicBytes) outputParams.get(0);
+                byte[] bytesValue = dynamicBytes.getValue();
+                String stringValue = new String(bytesValue);
+                return stringValue;
+        }
+
+        public static String getSymbol(Web3j web3j, String contractAddress) throws IOException {
+
+                Function function = new Function("symbol", Arrays.asList(),
+                                Arrays.asList(new TypeReference<DynamicBytes>() {
+                                }));
+                String encodedFunction = FunctionEncoder.encode(function);
+                EthCall response = web3j.ethCall(
+                                Transaction.createEthCallTransaction("0x0d3e02768ab63516ab5d386fad462214ca3e6a86",
+                                                contractAddress,
+                                                encodedFunction),
+                                DefaultBlockParameterName.LATEST)
+                                .send();
+                List<Type> outputParams = FunctionReturnDecoder.decode(response.getValue(),
+                                function.getOutputParameters());
+                DynamicBytes dynamicBytes = (DynamicBytes) outputParams.get(0);
+                byte[] bytesValue = dynamicBytes.getValue();
+                String stringValue = new String(bytesValue);
+                return stringValue;
+        }
+
+        public static String getTOwnerOf(Web3j web3j, String contractAddress,
+                        String tokenId) throws IOException {
+                BigInteger tokenId_ = new BigInteger(tokenId);
+                Function function = new Function("ownerOf", Arrays.asList(new Uint256(tokenId_)),
+                                Arrays.asList(new TypeReference<Address>() {
+                                }));
+                String encodedFunction = FunctionEncoder.encode(function);
+                EthCall response = web3j.ethCall(
+                                Transaction.createEthCallTransaction("0x0d3e02768ab63516ab5d386fad462214ca3e6a86",
+                                                contractAddress,
+                                                encodedFunction),
+                                DefaultBlockParameterName.LATEST)
+                                .send();
+                List<Type> outputParams = FunctionReturnDecoder.decode(response.getValue(),
+                                function.getOutputParameters());
+
+                Object bytesValue = outputParams.get(0).getValue();
+                String stringValue = (String) bytesValue;
+                return stringValue;
+        }
 }
