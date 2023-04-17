@@ -29,7 +29,7 @@
     <dependency>
       <groupId>org.web3j</groupId>
       <artifactId>core</artifactId>
-      <version>4.9.7</version>
+      <version>4.9.8</version>
     </dependency>
 
     <dependency>
@@ -44,6 +44,14 @@
   <build>
     <pluginManagement>      <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
+        <plugin>
+          <groupId>org.web3j</groupId>
+          <artifactId>web3j-maven-plugin</artifactId>
+          <version>4.9.4</version>
+          <configuration>
+            <soliditySourceFiles/>
+          </configuration>
+        </plugin>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -92,6 +100,7 @@
             <target>1.8</target>
           </configuration>
         </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
@@ -101,6 +110,13 @@
 
 
     <dependencies>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.25</version>
+      </dependency>
+
 
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
