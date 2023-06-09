@@ -26,10 +26,10 @@
   },
   "primaryType": "BasicOrderParameters",
   "domain": {
-    "name": "Demo",
-    "version": "2",
-    "chainId": 31337,
-    "verifyingContract": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933"
+    "name": "YunGou",
+    "version": "2.0",
+    "chainId": 5,
+    "verifyingContract": "0xb0E3773e3E02d0A1653F90345Bc8889fC820E230"
   },
   "message": {
     "orderType": "0",

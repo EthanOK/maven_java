@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SignatureException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Sign;
@@ -14,17 +15,25 @@ import org.web3j.crypto.StructuredDataEncoder;
 import org.web3j.crypto.Sign.SignatureData;
 import org.web3j.utils.Numeric;
 
-public class EIP712OrderStruct {
+public class EIP712YunGouOrderHash {
     static String jsonMessageString;
 
     public static void main(String[] args) throws IOException, RuntimeException, SignatureException {
-        String JSONFilePath = "demo/src/main/java/com/utils/structured_data_json_files/OrderStructData.json";
+        String JSONFilePath = "demo/src/main/java/com/utils/structured_data_json_files/YunGouOrderStructData.json";
         jsonMessageString = new String(
                 Files.readAllBytes(Paths.get(JSONFilePath).toAbsolutePath()), StandardCharsets.UTF_8);
         String verifyAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-
-        // get hashStructuredData
         StructuredDataEncoder dataEncoder = new StructuredDataEncoder(jsonMessageString);
+
+        // TODO: getorderHash
+        byte[] dataHash = dataEncoder.hashMessage(
+                dataEncoder.jsonMessageObject.getPrimaryType(),
+                (HashMap<String, Object>) dataEncoder.jsonMessageObject.getMessage());
+        String dataHashString = Numeric.toHexString(dataHash);
+        System.out.println("keccak256(abi.encode(TYPE_HASH, parameters)):");
+        System.out.println("YunGou orderHash: " + dataHashString);
+        // get hashStructuredData
+
         byte[] hashStructuredMessage = dataEncoder.hashStructuredData();
         String hashStructuredMessageHex = Numeric.toHexString(hashStructuredMessage);
         System.out.println(hashStructuredMessageHex);

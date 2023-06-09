@@ -31,7 +31,7 @@ public class CalcOpenseaOrderHashVerrify {
                 dataEncoder.jsonMessageObject.getPrimaryType(),
                 (HashMap<String, Object>) dataEncoder.jsonMessageObject.getMessage());
         String dataHashString = Numeric.toHexString(dataHash);
-        System.out.println("keccak256(abi.encode(BASICORDER_TYPE_HASH, parameters)):");
+        System.out.println("keccak256(abi.encode(TYPE_HASH, parameters)):");
         System.out.println("orderHash: " + dataHashString);
 
         byte[] hashStructuredMessage = dataEncoder.hashStructuredData();
