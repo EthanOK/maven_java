@@ -22,7 +22,8 @@ public class EIP712YunGouOrderHash {
         String JSONFilePath = "demo/src/main/java/com/utils/structured_data_json_files/YunGouOrderStructData.json";
         jsonMessageString = new String(
                 Files.readAllBytes(Paths.get(JSONFilePath).toAbsolutePath()), StandardCharsets.UTF_8);
-        String verifyAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+        System.out.println(jsonMessageString);
+        String verifyAddress = "0x6278a1e803a76796a3a1f7f6344fe874ebfe94b2";
         StructuredDataEncoder dataEncoder = new StructuredDataEncoder(jsonMessageString);
 
         // TODO: getorderHash
@@ -33,12 +34,11 @@ public class EIP712YunGouOrderHash {
         System.out.println("keccak256(abi.encode(TYPE_HASH, parameters)):");
         System.out.println("YunGou orderHash: " + dataHashString);
         // get hashStructuredData
-
         byte[] hashStructuredMessage = dataEncoder.hashStructuredData();
         String hashStructuredMessageHex = Numeric.toHexString(hashStructuredMessage);
         System.out.println(hashStructuredMessageHex);
 
-        String signature = "0x6193dd8ea70d5cbfac407cf6d88ef0cd73756bbd9e655aae75e0d217179dd6fe2769a39ceeefd6982b3c8bcc217af57d8a929261200c1ae7304c107dc6f6dc4b1b";
+        String signature = "0x4aa3566f217dc999c9de943b2ac4f56fb66b44e65645cb5fc44a6c30ded726582c8012ccbe2f4d7c015f37b3d1b1ef8795ad82dd916af351097253bb17b065ac1b";
         Boolean result = verify(hashStructuredMessageHex, signature, verifyAddress);
         System.out.println("verify result: " + result);
     }
@@ -50,6 +50,7 @@ public class EIP712YunGouOrderHash {
 
         if (publicKey != null) {
             String address = "0x" + Keys.getAddress(publicKey);
+            System.out.println(address);
             return verifyAddress.equalsIgnoreCase(address);
         }
         return false;

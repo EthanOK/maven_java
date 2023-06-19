@@ -28,21 +28,21 @@
   "domain": {
     "name": "YunGou",
     "version": "2.0",
-    "chainId": 5,
+    "chainId": "5",
     "verifyingContract": "0xb0E3773e3E02d0A1653F90345Bc8889fC820E230"
   },
   "message": {
     "orderType": "0",
     "offerer": "0x6278a1e803a76796a3a1f7f6344fe874ebfe94b2",
     "offerToken": "0xeaafcc17f28afe5cda5b3f76770efb7ef162d20b",
-    "offerTokenId": "7",
+    "offerTokenId": "8",
     "unitPrice": "10000000000000000",
     "sellAmount": "1",
-    "startTime": "1684304543",
-    "endTime": "1686896535",
+    "startTime": "1686286200",
+    "endTime": "1686986200",
     "paymentToken": "0x0000000000000000000000000000000000000000",
     "paymentTokenId": "0",
-    "salt": "7",
+    "salt": "88888888888",
     "royaltyFee": "250000000000000",
     "platformFee": "250000000000000",
     "afterTaxPrice": "9500000000000000"

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import org.web3j.crypto.StructuredDataEncoder;
 import org.web3j.utils.Numeric;
 
-public class CalcOpenseaOrderHashVerify {
+public class EIP712OpenseaOrderHash {
     private static String jsonMessageString;
 
     public static void main(String[] args) throws SignatureException, Exception {
